@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Mom Nice</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://vjs.zencdn.net/7.11.4/video-js.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="custom-style.css">
+  <script src="https://vjs.zencdn.net/7.11.4/video.min.js"></script>
+</head>
+<body>
+    <video
+    id="videoPlayer"
+    class="video-js vjs-default-skin vjs-big-play-centered"
+    controls
+    preload="auto"
+    width="800"
+    height="450"
+    data-setup='{"fluid": true, "playbackRates": [0.5, 1, 1.5, 2]}'
+    >
+    <source src="https://storage.googleapis.com/trojan-horse/pitchvideo.webm" type="video/mp4">
+    <p class="vjs-no-js">
+        To view this video please enable JavaScript, and consider upgrading to a
+        web browser that
+        <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+    </p>
+    </video>
+    <div id="videoOverlay" class="video-overlay"></div>
+        
+    <link rel="stylesheet" href="style.css">
+
+    <script>
+      const player = videojs('videoPlayer');
+    
+      // Create the top right watermark
+      var ctaText = 'Register Now Before its Too Late'
+      var ctaLink = 'https://example.com'
+    
+      const watermarkTop = document.createElement('a');
+      watermarkTop.href = ctaLink;
+      watermarkTop.target = '_blank';
+      watermarkTop.className = 'vjs-watermark-top';    
+      watermarkTop.innerText = ctaText;
+    
+      // Create the centered watermark
+      const watermarkCenter = document.createElement('a');
+      watermarkCenter.href = ctaLink;
+      watermarkCenter.target = '_blank';
+      watermarkCenter.className = 'vjs-watermark-center';
+      watermarkCenter.innerText = ctaText;
+    
+      // Add the custom watermarks to the player
+      player.ready(() => {
+        player.el().appendChild(watermarkTop);
+        player.el().appendChild(watermarkCenter);
+      });
+    
+      // Show the top right watermark when the video is playing
+      player.on('play', () => {
+        watermarkTop.style.display = 'block';
+      });
+    
+      // Hide the top right watermark when the video is paused or ended
+      player.on('pause', () => {
+        if (!player.paused()) {
+          watermarkTop.style.display = 'none';
+        }
+      });
+    
+      player.on('ended', () => {
+        watermarkTop.style.display = 'none';
+      });
+    
+      // Show the centered watermark when the video ends
+      player.on('ended', () => {
+        watermarkCenter.style.display = 'block';
+      });
+    
+      // Hide the centered watermark when the video is replayed
+      player.on('play', () => {
+        watermarkCenter.style.display = 'none';
+      });
+    
+      // Create the Watch Again button
+      const watchAgainLink = document.createElement('a');
+      watchAgainLink.className = 'vjs-watch-again';
+      watchAgainLink.style.display = 'none'; // Add this line to hide the button initially
+      watchAgainLink.onclick = () => {
+        player.currentTime(0);
+        player.play();
+      };
+    
+      const watchAgainIcon = document.createElement('span');
+      watchAgainIcon.className = 'material-icons';
+      watchAgainIcon.innerText = 'replay';
+      watchAgainLink.appendChild(watchAgainIcon); // Add the icon to the link
+    
+      const watchAgainText = document.createTextNode('Watch Again');
+      watchAgainLink.appendChild(watchAgainText); // Add the text to the link
+    
+      player.on('ended', () => {
+        watchAgainLink.style.display = 'flex';
+      });
+    
+      player.on('play', () => {
+        watchAgainLink.style.display = 'none';
+      });
+    
+      player.ready(() => {
+        player.el().appendChild(watchAgainLink);
+      });
+
+    // Custom keyboard controls
+    let videoStarted = false;
+
+    player.on('keydown', (event) => {
+    const currentTime = player.currentTime();
+    const volume = player.volume();
+    const isMuted = player.muted();
+
+    switch (event.which) {
+        case 32: // Spacebar
+        if (!videoStarted) {
+            player.play();
+            videoStarted = true;
+        } else {
+            player.paused() ? player.play() : player.pause();
+        }
+        break;
+        case 32: // Spacebar
+        player.paused() ? player.play() : player.pause();
+        break;
+        case 37: // Left arrow
+        player.currentTime(currentTime - 5);
+        break;
+        case 39: // Right arrow
+        player.currentTime(currentTime + 5);
+        break;
+        case 38: // Up arrow
+        player.volume(Math.min(volume + 0.1, 1));
+        player.controlBar.volumePanel.show();
+        break;
+        case 40: // Down arrow
+        player.volume(Math.max(volume - 0.1, 0));
+        player.controlBar.volumePanel.show();
+        break;
+        case 77: // M
+        player.muted(!isMuted);
+        break;
+        case 70: // F
+        if (player.isFullscreen()) {
+            player.exitFullscreen();
+        } else {
+            player.requestFullscreen();
+        }
+        break;
+    }
+    });
+
+    // Hide the volume control after a delay when the mouse leaves the control bar
+    player.controlBar.volumePanel.on('mouseleave', () => {
+    player.controlBar.volumePanel.hide();
+    });
+
+    player.on('click', () => {
+    player.el().focus();
+    });
+
+    // Focus the player when it is ready
+    player.ready(() => {
+    player.el().focus();
+    });
+
+    // Show the centered watermark when the video ends
+    player.on('ended', () => {
+    watermarkCenter.style.display = 'block';
+    document.getElementById('videoOverlay').style.display = 'block';
+    });
+
+    // Hide the centered watermark when the video is replayed
+    player.on('play', () => {
+    watermarkCenter.style.display = 'none';
+    document.getElementById('videoOverlay').style.display = 'none';
+    });
+
+player.on('ended', () => {
+  const videoOverlay = document.getElementById('videoOverlay');
+  videoOverlay.style.display = 'block';
+});
+  </script>
+</body>
+</html>

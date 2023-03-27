@@ -1,0 +1,18 @@
+.video-js .vjs-big-play-button {
+    background-color: rgb(212, 25, 25) !important;
+    border-radius: 8px !important;
+    border: none !important;
+    position: absolute;
+}
+
+.video-js .vjs-big-play-button:before {
+    font-size: 6.5em !important;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.video-js .vjs-big-play-button:hover {
+    background-color: #e53326 !important;
+}
